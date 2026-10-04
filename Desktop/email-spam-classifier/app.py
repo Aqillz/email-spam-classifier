@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,8 +12,12 @@ st.write("Type a message below to find out if it is spam or genuine.")
 # 2. Train and cache the model
 @st.cache_resource
 def train_model():
-    # Load data
-    df = pd.read_csv('data/spam.csv', encoding='latin-1')
+    # Dynamically get the exact folder path where app.py is located
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(current_dir, 'data', 'spam.csv')
+    
+    # Load data using the new dynamic path
+    df = pd.read_csv(data_path, encoding='latin-1')
     df = df[['v1', 'v2']]
     df.columns = ['label', 'message']
     df['label'] = df['label'].map({'ham': 0, 'spam': 1})
